@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directions</title>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <h1 id="heading"></h1>
+  <div id="routing"></div>
+
+  <script>
+    function getUrlParams(url) {
+      const params = {};
+      const urlParams = url.split("?")[1].split("&");
+      for (let i = 0; i < urlParams.length; i++) {
+        const param = urlParams[i].split("=");
+        params[param[0]] = param[1];
+      }
+      return params;
+    }
+
+    // Get the current URL
+    const currentUrl = window.location.href;
+
+    // Get parameters from the URL
+    const params = getUrlParams(currentUrl);
+
+    // Extract the 'to' and 'from' parameters
+    const destination = params.to;
+    const origin = params.from;
+
+    const heading = document.getElementById("heading");
+    heading.innerHTML = `Directions from ${origin.replace(/%20/g, " ")} to ${destination.replace(/%20/g, " ")}`;
+
+    axios
+      .get(`https://www.mapquestapi.com/directions/v2/route?key=MsbC6nKGEbRPNkOuDGYfFGyTLORJTx06&from=${origin}&to=${destination.replace(/%20/g, " ")}`)
+      .then((response) => {
+        const steps = response.data.route.legs[0].maneuvers;
+        const routingContainer = document.getElementById("routing");
+
+        steps.forEach((step, index) => {
+          const stepElement = document.createElement("div");
+          stepElement.classList.add("step");
+          stepElement.innerHTML = `
+            <p><strong>Step ${index + 1}:</strong> ${step.narrative}</p>
+          `;
+          routingContainer.appendChild(stepElement);
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching directions:", error);
+        const routingContainer = document.getElementById("routing");
+        routingContainer.innerHTML = "<p>Error fetching directions. Please try again later.</p>";
+      });
+  </script>
+</body>
+</html>
