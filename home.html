@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+  <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 dark:bg-gray-800">
+    <div class="container flex flex-wrap justify-between items-center mx-auto">
+      <a href="#" class="flex">
+        <svg class="mr-3 h-10" viewBox="0 0 52 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M1.87695 53H28.7791C41.5357 53 51.877 42.7025 51.877 30H24.9748C12.2182 30 1.87695 40.2975 1.87695 53Z"
+            fill="#76A9FA" />
+          <path
+            d="M0.000409561 32.1646L0.000409561 66.4111C12.8618 66.4111 23.2881 55.9849 23.2881 43.1235L23.2881 8.87689C10.9966 8.98066 1.39567 19.5573 0.000409561 32.1646Z"
+            fill="#A4CAFE" />
+          <path d="M50.877 5H23.9748C11.2182 5 0.876953 15.2975 0.876953 28H27.7791C40.5357 28 50.877 17.7025 50.877 5Z"
+            fill="#1C64F2" />
+        </svg>
+        <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">Travel Agency</span>
+      </a>
+      <div class="hidden w-full md:block md:w-auto" id="mobile-menu">
+        <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+          <li>
+            <a href="./home.html"
+              class="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
+              aria-current="page">Home</a>
+          </li>
+          <li>
+            <a href="./population.html"
+              class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Population</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Bar -->
+  <div class="container mx-auto mt-8 px-4">
+    <input id="searchInput" name="search" class="border w-full py-2 px-4 outline-blue-500"
+      placeholder="Search Destinations, Airlines, Origin, ticket prices..." />
+
+    <button onclick="search()"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">
+      Search
+    </button>
+  </div>
+
+  <div class="container mx-auto mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Currency Converter -->
+      <div class="bg-white p-6 rounded-md shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Currency Rate Converter</h2>
+        <div class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4">
+          <!-- Currency One -->
+          <div class="flex-grow">
+            <label for="currency-one" class="block mb-1 font-semibold">From Currency</label>
+            <select id="currency-one"
+              class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+              <option value="AED">AED</option>
+              <option value="OMR">OMR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="KSH">KSH</option>
+              <option value="SDG">SDG</option>
+              <option value="SCR">SCR</option>
+            </select>
+          </div>
+          <!-- Currency Amount -->
+          <div class="flex-grow">
+            <label for="currency-amount" class="block mb-1 font-semibold">Amount</label>
+            <input type="number" id="currency-amount"
+              class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              placeholder="Enter amount" value="0">
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mt-4">
+          <!-- Currency Two -->
+          <div class="flex-grow">
+            <label for="currency-two" class="block mb-1 font-semibold">To Currency</label>
+            <select id="currency-two"
+              class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+              <option value="AED">AED</option>
+              <option value="OMR">OMR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="KSH">KSH</option>
+              <option value="SDG">SDG</option>
+              <option value="SCR">SCR</option>
+            </select>
+          </div>
+          <!-- Converted Amount -->
+          <div class="flex-grow">
+            <label for="converted-amount" class="block mb-1 font-semibold">Converted Amount</label>
+            <input type="text" id="converted-amount"
+              class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              placeholder="Converted amount" value="0" disabled>
+          </div>
+        </div>
+        <!-- Convert Button -->
+        <div class="mt-6">
+          <button id="Convert"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline">Convert
+            Currency</button>
+          <div id="conversion-rate" class="text-sm mt-2"></div>
+        </div>
+      </div>
+      <!-- Destinations -->
+      <div class="bg-white p-6 rounded-md shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Flight Destinations</h2>
+        <div id="flights" class="space-y-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("Convert").addEventListener("click", function () {
+      const amount = parseFloat(document.getElementById("currency-amount").value);
+      const fromCurrency = document.getElementById("currency-one").value;
+      const toCurrency = document.getElementById("currency-two").value;
+
+      // Call your currency conversion API here
+      axios.get(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`)
+        .then(response => {
+          const rates = response.data.rates;
+          const rate = rates[toCurrency];
+          const convertedAmount = amount * rate;
+
+          // Update UI with converted amount and rate
+          document.getElementById("conversion-rate").innerText = `1 ${fromCurrency} = ${rate.toFixed(2)} ${toCurrency}`;
+          document.getElementById("converted-amount").value = convertedAmount.toFixed(2);
+        })
+        .catch(error => {
+          console.error("Error converting currency:", error);
+          alert("Failed to convert currency. Please try again later.");
+        });
+    });
+
+  </script>
+
+  <script>
+    function search() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+      const flights = document.querySelectorAll("#flights > div");
+
+      flights.forEach(flight => {
+        const originCity = flight.querySelector("h3").innerText.toLowerCase();
+        const destinationCity = originCity.split(" to ")[1].toLowerCase();
+        const airline = flight.querySelector("p:nth-of-type(2)").innerText.toLowerCase();
+        const availableSeats = flight.querySelector("p:nth-of-type(3)").innerText.toLowerCase();
+        const ticketPrice = parseFloat(flight.querySelector("p:nth-of-type(4)").innerText.split("$")[1]);
+
+        if (originCity.includes(searchTerm) ||
+          destinationCity.includes(searchTerm) ||
+          airline.includes(searchTerm) ||
+          availableSeats.includes(searchTerm) ||
+          ticketPrice.toString().includes(searchTerm)) {
+          flight.style.display = "block";
+        } else {
+          flight.style.display = "none";
+        }
+      });
+    }
+    // Fetch and display flight destinations
+    axios.get("http://localhost:3000/api/v1/auth/read/destinations")
+      .then(response => {
+        const flights = response.data.data;
+        const flightsContainer = document.getElementById("flights");
+
+        flights.forEach(flight => {
+          const card = document.createElement("div");
+          card.classList.add("bg-gray-200", "p-4", "rounded-md");
+
+          card.innerHTML = `
+            <h3 class="text-lg font-semibold mb-2">${flight.origin_city} to ${flight.destination_city}</h3>
+            <p><strong>Airline:</strong> ${flight.airline}</p>
+            <p><strong>Available Seats:</strong> ${flight.available_seats}</p>
+            <p><strong>No. of Connections:</strong> ${flight.no_of_connections}</p>
+            <p><strong>Ticket Price:</strong> $${flight.ticket_price}</p>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline" onclick="bookFlight('${flight.origin_city}', '${flight.destination_city}')">Book</button>
+          `;
+
+          flightsContainer.appendChild(card);
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching flights:", error);
+      });
+
+    function bookFlight(originCity, destinationCity) {
+      alert(`Booking flight from ${originCity} to ${destinationCity}`);
+
+      // Display "Successfully booked" message with flight details
+      const bookedMessage = `Successfully booked flight from ${originCity} to ${destinationCity}`;
+      const flightsContainer = document.getElementById("flights");
+      flightsContainer.innerHTML = `<p>${bookedMessage}</p>`;
+
+      // Open map showing direction from originCity to destinationCity
+      window.open(
+        `maps.html?from=${originCity}&to=${destinationCity}`,
+        "_blank",
+        "location=yes,height=570,width=520,scrollbars=yes,status=yes"
+      );
+    }
+  </script>
+</body>
+
+</html>
